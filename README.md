@@ -23,7 +23,7 @@ import 'package:async_builder/async_builder.dart';
 ```dart
 AsyncBuilder<String>(
   future: myFuture,
-  waiting: (context, value) => Text('Loading...'),
+  waiting: (context) => Text('Loading...'),
   builder: (context, value) => Text('$value'),
   error: (context, error, stackTrace) => Text('Error! $error'),
 )
@@ -34,7 +34,7 @@ AsyncBuilder<String>(
 ```dart
 AsyncBuilder<String>(
   stream: myStream,
-  waiting: (context, value) => Text('Loading...'),
+  waiting: (context) => Text('Loading...'),
   builder: (context, value) => Text('$value'),
   error: (context, error, stackTrace) => Text('Error! $error'),
   closed: (context, value) => Text('$value (closed)'),
