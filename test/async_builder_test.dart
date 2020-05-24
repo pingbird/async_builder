@@ -26,7 +26,7 @@ void reportError(FlutterErrorDetails details) {
 void main() {
   group('AsyncBuilder', () {
     testWidgets('Stream', (tester) async {
-      expect(reportedErrors, isEmpty);
+      reportedErrors.clear();
       final ctrl = StreamController<String>();
 
       await tester.pumpWidget(buildFrame(AsyncBuilder(
@@ -108,7 +108,7 @@ void main() {
     });
 
     testWidgets('Stops listening when disposed', (tester) async {
-      expect(reportedErrors, isEmpty);
+      reportedErrors.clear();
       final ctrl = StreamController<String>();
 
       await tester.pumpWidget(buildFrame(AsyncBuilder(
@@ -126,7 +126,7 @@ void main() {
     });
 
     testWidgets('Stops listening when replaced', (tester) async {
-      expect(reportedErrors, isEmpty);
+      reportedErrors.clear();
       final ctrl = StreamController<String>();
       final ctrl2 = StreamController<String>();
 
@@ -169,7 +169,7 @@ void main() {
     });
 
     testWidgets('Future', (tester) async {
-      expect(reportedErrors, isEmpty);
+      reportedErrors.clear();
       final ctrl = Completer<String>();
 
       await tester.pumpWidget(buildFrame(AsyncBuilder(
@@ -190,7 +190,7 @@ void main() {
     });
 
     testWidgets('Future error', (tester) async {
-      expect(reportedErrors, isEmpty);
+      reportedErrors.clear();
       final ctrl = Completer<String>();
 
       await tester.pumpWidget(buildFrame(AsyncBuilder(
@@ -225,7 +225,7 @@ void main() {
     });
 
     testWidgets('SynchronousFuture', (tester) async {
-      expect(reportedErrors, isEmpty);
+      reportedErrors.clear();
 
       await tester.pumpWidget(buildFrame(AsyncBuilder(
         initial: 'waiting',
@@ -237,10 +237,69 @@ void main() {
       expect(tester.widget<Text>(findText).data, equals('foo'));
       await tester.pump(Duration.zero);
       expect(tester.widget<Text>(findText).data, equals('foo'));
+      expect(reportedErrors, isEmpty);
+    });
+
+    testWidgets('Future complete after dispose', (tester) async {
+      reportedErrors.clear();
+      final ctrl = Completer<String>();
+
+      await tester.pumpWidget(buildFrame(AsyncBuilder(
+        builder: (context, value) => Text('$value'),
+        future: ctrl.future,
+        reportError: reportError,
+      )));
+
+      await tester.pumpWidget(SizedBox());
+
+      ctrl.complete('foo');
+
+      await tester.pump(Duration.zero);
+      expect(reportedErrors, isEmpty);
+    });
+
+    testWidgets('Future errors after dispose', (tester) async {
+      reportedErrors.clear();
+      final ctrl = Completer<String>();
+
+      await tester.pumpWidget(buildFrame(AsyncBuilder(
+        builder: (context, value) => Text('$value'),
+        future: ctrl.future,
+        reportError: reportError,
+      )));
+
+      await tester.pumpWidget(SizedBox());
+
+      ctrl.completeError('Test error message');
+
+      await tester.pump(Duration.zero);
+
+      expect(reportedErrors.single.exception, equals('Test error message'));
+      reportedErrors.clear();
+    });
+
+    testWidgets('Future errors after dispose with error builder', (tester) async {
+      reportedErrors.clear();
+      final ctrl = Completer<String>();
+
+      await tester.pumpWidget(buildFrame(AsyncBuilder(
+        builder: (context, value) => Text('$value'),
+        error: (context, error, stackTrace) => Text('$error'),
+        future: ctrl.future,
+        reportError: reportError,
+      )));
+
+      await tester.pumpWidget(SizedBox());
+
+      ctrl.completeError('Test error message');
+
+      await tester.pump(Duration.zero);
+
+      expect(reportedErrors, isEmpty);
     });
 
     testWidgets('BehaviorSubject', (tester) async {
-      expect(reportedErrors, isEmpty);
+      reportedErrors.clear();
       final ctrl = BehaviorSubject<String>();
 
       await tester.pumpWidget(buildFrame(AsyncBuilder(
@@ -278,10 +337,11 @@ void main() {
       expect(tester.widget<Text>(findText).data, equals('bar'));
 
       ctrl.close();
+      expect(reportedErrors, isEmpty);
     });
 
     testWidgets('Pausing', (tester) async {
-      expect(reportedErrors, isEmpty);
+      reportedErrors.clear();
       var paused = false;
 
       final ctrl = StreamController<String>(
@@ -307,6 +367,7 @@ void main() {
 
       expect(paused, isFalse);
       ctrl.close();
+      expect(reportedErrors, isEmpty);
     });
   });
 }

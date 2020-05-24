@@ -89,7 +89,7 @@ class _AsyncBuilderState extends State<AsyncBuilder> {
   void _handleError(Object error, StackTrace stackTrace) {
     _lastError = error;
     _lastStackTrace = stackTrace;
-    if (widget.error != null) {
+    if (widget.error != null && mounted) {
       setState(() {});
     }
     if (!widget.silent) {
@@ -105,7 +105,7 @@ class _AsyncBuilderState extends State<AsyncBuilder> {
     _cancel();
     var future = widget.future;
     future.then((value) {
-      if (future != widget.future) return; // Skip if future changed
+      if (future != widget.future || !mounted) return; // Skip if future changed
       setState(() {
         _lastValue = value;
         _hasFired = true;
