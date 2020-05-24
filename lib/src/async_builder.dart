@@ -34,6 +34,9 @@ typedef ErrorReporterFn = void Function(FlutterErrorDetails details);
 ///
 /// If [pause] is true, the [StreamSubscription] used to listen to [stream] is
 /// paused.
+///
+/// Provide [reportError] to change the default behavior of reporting errors,
+/// which is to pass the details to [FlutterError.reportError].
 class AsyncBuilder<T> extends StatefulWidget {
   final WidgetBuilder waiting;
   final ValueBuilderFn<T> builder;
