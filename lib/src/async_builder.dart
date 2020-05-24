@@ -34,6 +34,29 @@ typedef ErrorReporterFn = void Function(FlutterErrorDetails details);
 ///
 /// If [pause] is true, the [StreamSubscription] used to listen to [stream] is
 /// paused.
+///
+/// Example using [future]:
+///
+/// ```dart
+/// AsyncBuilder<String>(
+///   future: myFuture,
+///   waiting: (context, value) => Text('Loading...'),
+///   builder: (context, value) => Text('$value'),
+///   error: (context, error, stackTrace) => Text('Error! $error'),
+/// )
+/// ```
+///
+/// Example using [stream]:
+///
+/// ```dart
+/// AsyncBuilder<String>(
+///   stream: myStream,
+///   waiting: (context, value) => Text('Loading...'),
+///   builder: (context, value) => Text('$value'),
+///   error: (context, error, stackTrace) => Text('Error! $error'),
+///   closed: (context, value) => Text('$value (closed)'),
+/// )
+/// ```
 class AsyncBuilder<T> extends StatefulWidget {
   final WidgetBuilder waiting;
   final ValueBuilderFn<T> builder;
