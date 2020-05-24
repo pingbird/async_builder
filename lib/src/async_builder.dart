@@ -69,7 +69,8 @@ class AsyncBuilder<T> extends StatefulWidget {
   final bool pause;
   final ErrorReporterFn reportError;
 
-  AsyncBuilder({
+  const AsyncBuilder({
+    Key key,
     this.waiting,
     @required this.builder,
     this.error,
@@ -85,7 +86,8 @@ class AsyncBuilder<T> extends StatefulWidget {
        assert(builder != null),
        assert((future != null) != (stream != null), 'AsyncBuilder should be given either a stream or future'),
        assert(future == null || closed == null, 'AsyncBuilder should not be given both a future and closed builder'),
-       assert(pause != null);
+       assert(pause != null),
+       super(key: key);
 
   @override
   State<StatefulWidget> createState() => _AsyncBuilderState();
@@ -126,8 +128,8 @@ class _AsyncBuilderState extends State<AsyncBuilder> {
 
   void _initFuture() {
     _cancel();
-    var future = widget.future;
-    future.then((value) {
+    final future = widget.future;
+    future.then((Object value) {
       if (future != widget.future || !mounted) return; // Skip if future changed
       setState(() {
         _lastValue = value;
@@ -148,7 +150,7 @@ class _AsyncBuilderState extends State<AsyncBuilder> {
 
   void _initStream() {
     _cancel();
-    var stream = widget.stream;
+    final stream = widget.stream;
     if (stream != null) {
       var skipFirst = false;
       if (stream is ValueStream && stream.hasValue) {
@@ -157,7 +159,7 @@ class _AsyncBuilderState extends State<AsyncBuilder> {
         _lastValue = stream.value;
       }
       _subscription = stream.listen(
-        (event) {
+        (Object event) {
           if (skipFirst) {
             skipFirst = false;
             return;

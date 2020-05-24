@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -29,8 +28,8 @@ void main() {
       reportedErrors.clear();
       final ctrl = StreamController<String>();
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
-        waiting: (context) => Text('waiting'),
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
+        waiting: (context) => const Text('waiting'),
         builder: (context, value) => Text('$value'),
         stream: ctrl.stream,
         reportError: reportError,
@@ -40,7 +39,7 @@ void main() {
 
       // Remove waiting builder
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         builder: (context, value) => Text('$value'),
         stream: ctrl.stream,
         reportError: reportError,
@@ -50,7 +49,7 @@ void main() {
 
       // Add initial value
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         initial: 'foo',
         builder: (context, value) => Text('$value'),
         stream: ctrl.stream,
@@ -81,7 +80,7 @@ void main() {
 
       // Error builder
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         initial: 'foo',
         builder: (context, value) => Text('$value'),
         stream: ctrl.stream,
@@ -95,7 +94,7 @@ void main() {
 
       ctrl.close();
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         initial: 'foo',
         builder: (context, value) => Text('$value'),
         stream: ctrl.stream,
@@ -111,7 +110,7 @@ void main() {
       reportedErrors.clear();
       final ctrl = StreamController<String>();
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         builder: (context, value) => Text('$value'),
         stream: ctrl.stream,
         reportError: reportError,
@@ -132,7 +131,7 @@ void main() {
 
       // Listen to ctrl
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         builder: (context, value) => Text('$value'),
         stream: ctrl.stream,
         reportError: reportError,
@@ -142,7 +141,7 @@ void main() {
 
       // Switch stream to ctrl2
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         builder: (context, value) => Text('$value'),
         stream: ctrl2.stream,
         reportError: reportError,
@@ -153,7 +152,7 @@ void main() {
 
       // Switch to future
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         builder: (context, value) => Text('$value'),
         future: Future.value('foo'),
         reportError: reportError,
@@ -172,7 +171,7 @@ void main() {
       reportedErrors.clear();
       final ctrl = Completer<String>();
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         initial: 'waiting',
         builder: (context, value) => Text('$value'),
         future: ctrl.future,
@@ -193,7 +192,7 @@ void main() {
       reportedErrors.clear();
       final ctrl = Completer<String>();
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         initial: 'waiting',
         builder: (context, value) => Text('$value'),
         future: ctrl.future,
@@ -213,7 +212,7 @@ void main() {
 
       // Error builder
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         builder: (context, value) => Text('$value'),
         future: ctrl.future,
         error: (context, error, stackTrace) => Text('$error'),
@@ -227,7 +226,7 @@ void main() {
     testWidgets('SynchronousFuture', (tester) async {
       reportedErrors.clear();
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         initial: 'waiting',
         builder: (context, value) => Text('$value'),
         future: SynchronousFuture('foo'),
@@ -244,13 +243,13 @@ void main() {
       reportedErrors.clear();
       final ctrl = Completer<String>();
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         builder: (context, value) => Text('$value'),
         future: ctrl.future,
         reportError: reportError,
       )));
 
-      await tester.pumpWidget(SizedBox());
+      await tester.pumpWidget(const SizedBox());
 
       ctrl.complete('foo');
 
@@ -262,13 +261,13 @@ void main() {
       reportedErrors.clear();
       final ctrl = Completer<String>();
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         builder: (context, value) => Text('$value'),
         future: ctrl.future,
         reportError: reportError,
       )));
 
-      await tester.pumpWidget(SizedBox());
+      await tester.pumpWidget(const SizedBox());
 
       ctrl.completeError('Test error message');
 
@@ -282,14 +281,14 @@ void main() {
       reportedErrors.clear();
       final ctrl = Completer<String>();
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         builder: (context, value) => Text('$value'),
         error: (context, error, stackTrace) => Text('$error'),
         future: ctrl.future,
         reportError: reportError,
       )));
 
-      await tester.pumpWidget(SizedBox());
+      await tester.pumpWidget(const SizedBox());
 
       ctrl.completeError('Test error message');
 
@@ -302,7 +301,7 @@ void main() {
       reportedErrors.clear();
       final ctrl = BehaviorSubject<String>();
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         initial: 'waiting',
         builder: (context, value) => Text('$value'),
         stream: ctrl,
@@ -323,7 +322,7 @@ void main() {
 
       // Use ValueStream with existing value
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         builder: (context, value) => Text('$value'),
         stream: ctrl,
         reportError: reportError,
@@ -349,7 +348,7 @@ void main() {
         onResume: () => paused = false,
       );
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         builder: (context, value) => Text('$value'),
         stream: ctrl.stream,
         reportError: reportError,
@@ -358,7 +357,7 @@ void main() {
 
       expect(paused, isTrue);
 
-      await tester.pumpWidget(buildFrame(AsyncBuilder(
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         builder: (context, value) => Text('$value'),
         stream: ctrl.stream,
         reportError: reportError,
