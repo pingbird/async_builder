@@ -2,10 +2,38 @@ import 'dart:async';
 import 'package:flutter/widgets.dart';
 import 'package:rxdart/rxdart.dart';
 
+/// Signature for a function that builds a widget from a value.
 typedef ValueBuilderFn<T> = Widget Function(BuildContext context, T value);
+
+/// Signature for a function that builds a widget from an exception.
 typedef ErrorBuilderFn = Widget Function(BuildContext context, Object error, StackTrace stackTrace);
+
+/// Signature for a function that reports a flutter error, e.g. [FlutterError.reportError].
 typedef ErrorReporterFn = void Function(FlutterErrorDetails details);
 
+/// A Widget that builds depending on the state of a [Future] or [Stream].
+///
+/// AsyncBuilder must be given either a [future] or [stream], not both.
+///
+/// This is similar to [FutureBuilder] and [StreamBuilder] but accepts separate
+/// callbacks for each state. Just like the built in builders, the [future] or
+/// [stream] must not be started at build time.
+///
+/// If no data is available this calls [waiting], or [builder] with a null value
+/// if it's not provided.
+///
+/// If [initial] is provided, it is used in place of the value before one
+/// is available.
+///
+/// If the asynchronous operation completes with an error this calls [error],
+/// otherwise the error is printed to the console. The error is suppressed if
+/// [silent] is true.
+///
+/// When [stream] closes and [closed] is provided, [closed] is called with the
+/// last value emitted.
+///
+/// If [pause] is true, the [StreamSubscription] used to listen to [stream] is
+/// paused.
 class AsyncBuilder<T> extends StatefulWidget {
   final WidgetBuilder waiting;
   final ValueBuilderFn<T> builder;
@@ -32,7 +60,7 @@ class AsyncBuilder<T> extends StatefulWidget {
   }) : silent = silent ?? error != null,
        reportError = reportError ?? FlutterError.reportError,
        assert(builder != null),
-       assert((future != null) != (stream != null), 'AsyncBuilder should be given exactly one stream or future'),
+       assert((future != null) != (stream != null), 'AsyncBuilder should be given either a stream or future'),
        assert(future == null || closed == null, 'AsyncBuilder should not be given both a future and closed builder'),
        assert(pause != null);
 
@@ -117,9 +145,10 @@ class _AsyncBuilderState extends State<AsyncBuilder> {
           });
         },
         onDone: () {
-          setState(() {
-            _isClosed = true;
-          });
+          _isClosed = true;
+          if (widget.closed != null) {
+            setState(() {});
+          }
         },
         onError: _handleError,
       );
