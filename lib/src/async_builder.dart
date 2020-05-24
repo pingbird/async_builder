@@ -19,24 +19,21 @@ typedef ErrorReporterFn = void Function(FlutterErrorDetails details);
 /// callbacks for each state. Just like the built in builders, the [future] or
 /// [stream] must not be started at build time.
 ///
-/// If no data is available this calls [waiting], or [builder] with a null value
-/// if it's not provided.
+/// If [stream] is an rxdart [ValueStream] with an existing value, that value
+/// will be available on the first build. Otherwise when no data is available
+/// this builds either [waiting] if provided, or [builder] with a null value.
 ///
-/// If [initial] is provided, it is used in place of the value before one
-/// is available.
+/// If [initial] is provided, it is used in place of the value before one is
+/// available.
 ///
-/// If the asynchronous operation completes with an error this calls [error],
-/// otherwise the error is printed to the console. The error is suppressed if
-/// [silent] is true.
+/// If the asynchronous operation completes with an error this builds [error].
+/// If [error] is not provided [reportError] is called with the [FlutterErrorDetails].
 ///
-/// When [stream] closes and [closed] is provided, [closed] is called with the
+/// When [stream] closes and [closed] is provided, [closed] is built with the
 /// last value emitted.
 ///
 /// If [pause] is true, the [StreamSubscription] used to listen to [stream] is
 /// paused.
-///
-/// Provide [reportError] to change the default behavior of reporting errors,
-/// which is to pass the details to [FlutterError.reportError].
 class AsyncBuilder<T> extends StatefulWidget {
   final WidgetBuilder waiting;
   final ValueBuilderFn<T> builder;
