@@ -17,7 +17,8 @@ typedef ErrorReporterFn = void Function(FlutterErrorDetails details);
 ///
 /// This is similar to [FutureBuilder] and [StreamBuilder] but accepts separate
 /// callbacks for each state. Just like the built in builders, the [future] or
-/// [stream] must not be started at build time.
+/// [stream] should not be created at build time because it would restart
+/// every time the ancestor is rebuilt.
 ///
 /// If [stream] is an rxdart [ValueStream] with an existing value, that value
 /// will be available on the first build. Otherwise when no data is available
