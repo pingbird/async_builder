@@ -1,5 +1,5 @@
 name: async_builder
-description: Improved Future and Stream builder for Flutter.
+description: Flutter Future and Stream builder with less boilerplate and better error handling.
 version: 1.0.0
 homepage: https://github.com/PixelToast/async_builder
 
@@ -7,7 +7,7 @@ environment:
   sdk: ">=2.7.0 <3.0.0"
 
 dependencies:
-  rxdart: ^0.23.0
+  rxdart: ">=0.20.0 <1.0.0"
   flutter:
     sdk: flutter
 

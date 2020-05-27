@@ -85,17 +85,17 @@ class AsyncBuilder<T> extends StatefulWidget {
   }) : silent = silent ?? error != null,
        reportError = reportError ?? FlutterError.reportError,
        assert(builder != null),
-       assert((future != null) != (stream != null), 'AsyncBuilder should be given either a stream or future'),
+       assert(!((future != null) && (stream != null)), 'AsyncBuilder should be given either a stream or future'),
        assert(future == null || closed == null, 'AsyncBuilder should not be given both a future and closed builder'),
        assert(pause != null),
        super(key: key);
 
   @override
-  State<StatefulWidget> createState() => _AsyncBuilderState();
+  State<StatefulWidget> createState() => _AsyncBuilderState<T>();
 }
 
-class _AsyncBuilderState extends State<AsyncBuilder> {
-  Object _lastValue;
+class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
+  T _lastValue;
   Object _lastError;
   StackTrace _lastStackTrace;
   bool _hasFired = false;
@@ -130,7 +130,7 @@ class _AsyncBuilderState extends State<AsyncBuilder> {
   void _initFuture() {
     _cancel();
     final future = widget.future;
-    future.then((Object value) {
+    future.then((T value) {
       if (future != widget.future || !mounted) return; // Skip if future changed
       setState(() {
         _lastValue = value;
@@ -152,33 +152,31 @@ class _AsyncBuilderState extends State<AsyncBuilder> {
   void _initStream() {
     _cancel();
     final stream = widget.stream;
-    if (stream != null) {
-      var skipFirst = false;
-      if (stream is ValueStream && stream.hasValue) {
-        skipFirst = true;
-        _hasFired = true;
-        _lastValue = stream.value;
-      }
-      _subscription = stream.listen(
-        (Object event) {
-          if (skipFirst) {
-            skipFirst = false;
-            return;
-          }
-          setState(() {
-            _hasFired = true;
-            _lastValue = event;
-          });
-        },
-        onDone: () {
-          _isClosed = true;
-          if (widget.closed != null) {
-            setState(() {});
-          }
-        },
-        onError: _handleError,
-      );
+    var skipFirst = false;
+    if (stream is ValueStream<T> && stream.hasValue) {
+      skipFirst = true;
+      _hasFired = true;
+      _lastValue = stream.value;
     }
+    _subscription = stream.listen(
+      (T event) {
+        if (skipFirst) {
+          skipFirst = false;
+          return;
+        }
+        setState(() {
+          _hasFired = true;
+          _lastValue = event;
+        });
+      },
+      onDone: () {
+        _isClosed = true;
+        if (widget.closed != null) {
+          setState(() {});
+        }
+      },
+      onError: _handleError,
+    );
   }
 
   @override
@@ -195,13 +193,15 @@ class _AsyncBuilderState extends State<AsyncBuilder> {
   }
 
   @override
-  void didUpdateWidget(AsyncBuilder oldWidget) {
+  void didUpdateWidget(AsyncBuilder<T> oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (widget.future != null && widget.future != oldWidget.future) {
-      _initFuture();
-    } else if (widget.stream != oldWidget.stream) {
-      _initStream();
+    if (widget.future != null) {
+      if (widget.future != oldWidget.future) _initFuture();
+    } else if (widget.stream != null) {
+      if (widget.stream != oldWidget.stream) _initStream();
+    } else {
+      _cancel();
     }
 
     _updateStream();
