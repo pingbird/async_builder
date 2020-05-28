@@ -1,17 +1,66 @@
 import 'package:flutter/widgets.dart';
 import 'common.dart';
 
+/// A widget that initializes a value only when its configuration changes,
+/// useful for safe creation of async tasks.
+///
+/// The default constructor takes a `getter` and `builder`, the `getter`
+/// is called to initialize the value used in `builder`. In this case InitBuilder
+/// only re-initializes the value if the `getter` function changes, you should
+/// not pass it an anonymous function directly.
+///
+/// Alternative constructors [InitBuilder.arg] to [InitBuilder.arg7] can be used
+/// to pass arguments to the `getter`, these will re-initialize the value if
+/// either `getter` or the arguments change.
+///
+/// The basic usage of this widget is to make a separate function outside of
+/// build to start the task and then pass it to InitBuilder, for example:
+///
+/// ```dart
+/// static Future<int> getNumber() async => ...;
+///
+/// Widget build(context) => InitBuilder(
+///   getter: getNumber,
+///   builder: (context, future) => AsyncBuilder<int>(
+///     future: future,
+///     builder: (context, value) => Text('$value'),
+///   ),
+/// );
+/// ```
+///
+/// You may also want to pass arguments to the getter, for example to query
+/// shared preferences:
+///
+/// ```dart
+/// final String prefsKey;
+///
+/// Widget build(context) => InitBuilder.arg(
+///   getter: sharedPrefs.getString,
+///   arg: prefsKey,
+///   builder: (context, future) => AsyncBuilder<String>(
+///     future: future,
+///     builder: (context, value) => Text('$value'),
+///   ),
+/// );
+/// ```
 abstract class InitBuilder<T> extends StatefulWidget {
+  /// Builder that is called with a previously initialized value.
   final ValueBuilderFn<T> builder;
 
+  /// Factory constructor for a basic [InitBuilder].
   factory InitBuilder({
     Key key,
     @required ValueBuilderFn<T> builder,
     @required ValueGetter<T> getter,
   }) => _GetterInitBuilder<T>(key: key, builder: builder, getter: getter);
 
-  const InitBuilder.base({Key key, @required this.builder}) : super(key: key);
+  /// Base constructor for anything that implements [InitBuilder].
+  const InitBuilder.base({
+    Key key,
+    @required this.builder,
+  }) : assert(builder != null), super(key: key);
 
+  /// Constructor for one argument getters.
   static InitBuilder<T> arg<T, A>({
     Key key,
     @required ValueBuilderFn<T> builder,
@@ -24,6 +73,7 @@ abstract class InitBuilder<T> extends StatefulWidget {
     getter: getter,
   );
 
+  /// Constructor for two argument getters.
   static InitBuilder<T> arg2<T, A1, A2>({
     Key key,
     @required ValueBuilderFn<T> builder,
@@ -38,6 +88,7 @@ abstract class InitBuilder<T> extends StatefulWidget {
     getter: getter,
   );
 
+  /// Constructor for three argument getters.
   static InitBuilder<T> arg3<T, A1, A2, A3>({
     Key key,
     @required ValueBuilderFn<T> builder,
@@ -54,6 +105,7 @@ abstract class InitBuilder<T> extends StatefulWidget {
     getter: getter,
   );
 
+  /// Constructor for four argument getters.
   static InitBuilder<T> arg4<T, A1, A2, A3, A4>({
     Key key,
     @required ValueBuilderFn<T> builder,
@@ -72,6 +124,7 @@ abstract class InitBuilder<T> extends StatefulWidget {
     getter: getter,
   );
 
+  /// Constructor for five argument getters.
   static InitBuilder<T> arg5<T, A1, A2, A3, A4, A5>({
     Key key,
     @required ValueBuilderFn<T> builder,
@@ -92,6 +145,7 @@ abstract class InitBuilder<T> extends StatefulWidget {
     getter: getter,
   );
 
+  /// Constructor for six argument getters.
   static InitBuilder<T> arg6<T, A1, A2, A3, A4, A5, A6>({
     Key key,
     @required ValueBuilderFn<T> builder,
@@ -114,6 +168,7 @@ abstract class InitBuilder<T> extends StatefulWidget {
     getter: getter,
   );
 
+  /// Constructor for seven argument getters.
   static InitBuilder<T> arg7<T, A1, A2, A3, A4, A5, A6, A7>({
     Key key,
     @required ValueBuilderFn<T> builder,
@@ -138,7 +193,10 @@ abstract class InitBuilder<T> extends StatefulWidget {
     getter: getter,
   );
 
+  /// Called by the widget state to initialize the value.
   T initValue();
+
+  /// Returns true if the value should be re-initialized after a rebuild.
   bool shouldInit(covariant InitBuilder<T> other);
 
   @override
@@ -152,14 +210,15 @@ class _GetterInitBuilder<T> extends InitBuilder<T> {
     Key key,
     @required ValueBuilderFn<T> builder,
     @required this.getter,
-  }) : super.base(key: key, builder: builder);
+  }) : assert(getter != null),
+       super.base(key: key, builder: builder);
 
   @override
   T initValue() => getter();
 
   @override
   bool shouldInit(_GetterInitBuilder<T> other) =>
-      getter != other.getter;
+    getter != other.getter;
 }
 
 class _ArgInitBuilder<T, A> extends InitBuilder<T> {
@@ -171,7 +230,8 @@ class _ArgInitBuilder<T, A> extends InitBuilder<T> {
     @required ValueBuilderFn<T> builder,
     @required this.arg,
     @required this.getter,
-  }) : super.base(key: key, builder: builder);
+  }) : assert(getter != null),
+       super.base(key: key, builder: builder);
 
   @override
   T initValue() => getter(arg);
@@ -193,7 +253,8 @@ class _Arg2InitBuilder<T, A1, A2> extends InitBuilder<T> {
     @required this.arg1,
     @required this.arg2,
     @required this.getter,
-  }) : super.base(key: key, builder: builder);
+  }) : assert(getter != null),
+       super.base(key: key, builder: builder);
 
   @override
   T initValue() => getter(arg1, arg2);
@@ -218,7 +279,8 @@ class _Arg3InitBuilder<T, A1, A2, A3> extends InitBuilder<T> {
     @required this.arg2,
     @required this.arg3,
     @required this.getter,
-  }) : super.base(key: key, builder: builder);
+  }) : assert(getter != null),
+       super.base(key: key, builder: builder);
 
   @override
   T initValue() => getter(arg1, arg2, arg3);
@@ -246,7 +308,8 @@ class _Arg4InitBuilder<T, A1, A2, A3, A4> extends InitBuilder<T> {
     @required this.arg3,
     @required this.arg4,
     @required this.getter,
-  }) : super.base(key: key, builder: builder);
+  }) : assert(getter != null),
+       super.base(key: key, builder: builder);
 
   @override
   T initValue() => getter(arg1, arg2, arg3, arg4);
@@ -277,7 +340,8 @@ class _Arg5InitBuilder<T, A1, A2, A3, A4, A5> extends InitBuilder<T> {
     @required this.arg4,
     @required this.arg5,
     @required this.getter,
-  }) : super.base(key: key, builder: builder);
+  }) : assert(getter != null),
+       super.base(key: key, builder: builder);
 
   @override
   T initValue() => getter(arg1, arg2, arg3, arg4, arg5);
@@ -311,7 +375,8 @@ class _Arg6InitBuilder<T, A1, A2, A3, A4, A5, A6> extends InitBuilder<T> {
     @required this.arg5,
     @required this.arg6,
     @required this.getter,
-  }) : super.base(key: key, builder: builder);
+  }) : assert(getter != null),
+       super.base(key: key, builder: builder);
 
   @override
   T initValue() => getter(arg1, arg2, arg3, arg4, arg5, arg6);
@@ -348,7 +413,8 @@ class _Arg7InitBuilder<T, A1, A2, A3, A4, A5, A6, A7> extends InitBuilder<T> {
     @required this.arg6,
     @required this.arg7,
     @required this.getter,
-  }) : super.base(key: key, builder: builder);
+  }) : assert(getter != null),
+       super.base(key: key, builder: builder);
 
   @override
   T initValue() => getter(arg1, arg2, arg3, arg4, arg5, arg6, arg7);

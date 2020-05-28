@@ -51,17 +51,38 @@ import 'common.dart';
 /// )
 /// ```
 class AsyncBuilder<T> extends StatefulWidget {
+  /// The builder that should be called when no data is available.
   final WidgetBuilder waiting;
+
+  /// The default value builder.
   final ValueBuilderFn<T> builder;
+
+  /// The builder that should be called when an error was thrown by the future
+  /// or stream.
   final ErrorBuilderFn error;
+
+  /// The builder that should be called when the stream is closed.
   final ValueBuilderFn<T> closed;
+
+  /// If provided, this is the future the widget listens to.
   final Future<T> future;
+
+  /// If provided, this is the stream the widget listens to.
   final Stream<T> stream;
+
+  /// The initial value used before one is available.
   final T initial;
+
+  /// Whether or not to suppress printing errors to the console.
   final bool silent;
+
+  /// Whether or not to pause the stream subscription.
   final bool pause;
+
+  /// If provided, overrides the function that prints errors to the console.
   final ErrorReporterFn reportError;
 
+  /// Creates a widget that builds depending on the state of a [Future] or [Stream].
   const AsyncBuilder({
     Key key,
     this.waiting,
@@ -179,9 +200,8 @@ class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
       _initFuture();
     } else if (widget.stream != null) {
       _initStream();
+      _updatePause();
     }
-
-    _updatePause();
   }
 
   @override

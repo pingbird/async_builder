@@ -1,7 +1,9 @@
 # async_builder - Improved Future and Stream builder for Flutter.
 
-This package provides AsyncBuilder, a widget similar to StreamBuilder / FutureBuilder which is designed to reduce
+This package provides `AsyncBuilder`, a widget similar to StreamBuilder / FutureBuilder which is designed to reduce
 boilerplate and improve error handling.
+
+It also provides `InitBuilder`, which makes it easier to start async tasks safely.
 
 ## How to use
 
@@ -16,7 +18,7 @@ dependencies:
 import 'package:async_builder/async_builder.dart';
 ```
 
-## Examples
+## AsyncBuilder Examples
 
 ### Future
 
@@ -41,7 +43,9 @@ AsyncBuilder<String>(
 )
 ```
 
-## Features
+Note that you cannot provide both a stream and future.
+
+## AsyncBuilder Features
 
 ### Separate builders
 
@@ -76,3 +80,43 @@ first build.
 
 The `StreamSubscription` for this widget can be paused with the `pause` parameter, this is useful if you want to notify
 the upstream `StreamController` that you don't need updates.
+
+## InitBuilder
+
+InitBuilder is a widget that initializes a value only when its configuration changes, this is extremely useful because
+it allows you to safely start async tasks without a whole new StatefulWidget.
+
+The basic usage of this widget is to make a separate function outside of build to start the task and then pass it to
+InitBuilder, for example:
+
+```dart
+static Future<int> getNumber() async => ...;
+
+build(context) => InitBuilder(
+  getter: getNumber,
+  builder: (context, future) => AsyncBuilder<int>(
+    future: future,
+    builder: (context, value) => Text('$value'),
+  ),
+);
+```
+
+In this case, getNumber is only ever called on the first build.
+
+You may also want to pass arguments to the getter, for example to query shared preferences:
+
+```dart
+final String prefsKey;
+
+build(context) => InitBuilder.arg(
+  getter: sharedPrefs.getString,
+  arg: prefsKey,
+  builder: (context, future) => AsyncBuilder<String>(
+    future: future,
+    builder: (context, value) => Text('$value'),
+  ),
+);
+```
+
+The alternate constructors `InitBuilder.arg` to `InitBuilder.arg7` can be used to pass arguments to the `getter`, these
+will re-initialize the value if and only if either `getter` or the arguments change.
