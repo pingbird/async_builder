@@ -368,5 +368,26 @@ void main() {
       ctrl.close();
       expect(reportedErrors, isEmpty);
     });
+
+    testWidgets('No Stream or Future', (tester) async {
+      reportedErrors.clear();
+
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
+        builder: (context, value) => Text('$value'),
+        reportError: reportError,
+      )));
+
+      expect(tester.widget<Text>(findText).data, equals('null'));
+
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
+        waiting: (context) => const Text('waiting'),
+        builder: (context, value) => Text('$value'),
+        reportError: reportError,
+      )));
+
+      expect(tester.widget<Text>(findText).data, equals('waiting'));
+
+      expect(reportedErrors, isEmpty);
+    });
   });
 }

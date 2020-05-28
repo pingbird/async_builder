@@ -131,7 +131,7 @@ class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
     }, onError: _handleError);
   }
 
-  void _updateStream() {
+  void _updatePause() {
     if (_subscription != null) {
       if (widget.pause && !_subscription.isPaused) {
         _subscription.pause();
@@ -177,11 +177,11 @@ class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
 
     if (widget.future != null) {
       _initFuture();
-    } else {
+    } else if (widget.stream != null) {
       _initStream();
     }
 
-    _updateStream();
+    _updatePause();
   }
 
   @override
@@ -196,7 +196,7 @@ class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
       _cancel();
     }
 
-    _updateStream();
+    _updatePause();
   }
 
   @override
