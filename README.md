@@ -10,12 +10,13 @@ It also provides `InitBuilder`, which makes it easier to start async tasks safel
 **1. Add to dependencies**
 ```
 dependencies:
-  async_builder: ^1.0.0
+  async_builder: ^1.2.0
 ```
 
 **2. Import**
 ```
 import 'package:async_builder/async_builder.dart';
+import 'package:async_builder/init_builder.dart';
 ```
 
 ## AsyncBuilder Examples

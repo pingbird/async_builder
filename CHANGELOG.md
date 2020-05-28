@@ -1,3 +1,8 @@
+## [1.2.0]
+
+* Implemented InitBuilder
+* Bug fixes
+
 ## [1.1.0]
 
 * Added example
