@@ -84,15 +84,15 @@ the upstream `StreamController` that you don't need updates.
 ## InitBuilder
 
 InitBuilder is a widget that initializes a value only when its configuration changes, this is extremely useful because
-it allows you to safely start async tasks without a whole new StatefulWidget.
+it allows you to safely start async tasks without making a whole new StatefulWidget.
 
-The basic usage of this widget is to make a separate function outside of build to start the task and then pass it to
+The basic usage of this widget is to make a separate function outside of build that starts the task and then pass it to
 InitBuilder, for example:
 
 ```dart
 static Future<int> getNumber() async => ...;
 
-build(context) => InitBuilder(
+build(context) => InitBuilder<int>(
   getter: getNumber,
   builder: (context, future) => AsyncBuilder<int>(
     future: future,
@@ -108,7 +108,7 @@ You may also want to pass arguments to the getter, for example to query shared p
 ```dart
 final String prefsKey;
 
-build(context) => InitBuilder.arg(
+build(context) => InitBuilder.arg<String, String>(
   getter: sharedPrefs.getString,
   arg: prefsKey,
   builder: (context, future) => AsyncBuilder<String>(

@@ -7,20 +7,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:async_builder/async_builder.dart';
 import 'package:rxdart/rxdart.dart';
 
-final findText = find.byType(Text);
-
-Widget buildFrame(Widget child) {
-  return Directionality(
-    textDirection: TextDirection.ltr,
-    child: child,
-  );
-}
-
-final reportedErrors = <FlutterErrorDetails>[];
-
-void reportError(FlutterErrorDetails details) {
-  reportedErrors.add(details);
-}
+import 'common.dart';
 
 void main() {
   group('AsyncBuilder', () {

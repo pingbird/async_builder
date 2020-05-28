@@ -14,12 +14,12 @@ import 'common.dart';
 /// either `getter` or the arguments change.
 ///
 /// The basic usage of this widget is to make a separate function outside of
-/// build to start the task and then pass it to InitBuilder, for example:
+/// build that starts the task and then pass it to InitBuilder, for example:
 ///
 /// ```dart
 /// static Future<int> getNumber() async => ...;
 ///
-/// Widget build(context) => InitBuilder(
+/// Widget build(context) => InitBuilder<int>(
 ///   getter: getNumber,
 ///   builder: (context, future) => AsyncBuilder<int>(
 ///     future: future,
@@ -34,7 +34,7 @@ import 'common.dart';
 /// ```dart
 /// final String prefsKey;
 ///
-/// Widget build(context) => InitBuilder.arg(
+/// Widget build(context) => InitBuilder.arg<String, String>(
 ///   getter: sharedPrefs.getString,
 ///   arg: prefsKey,
 ///   builder: (context, future) => AsyncBuilder<String>(
