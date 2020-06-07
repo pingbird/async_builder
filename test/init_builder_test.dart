@@ -1,10 +1,6 @@
-import 'dart:async';
-
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:async_builder/async_builder.dart';
 import 'package:async_builder/init_builder.dart';
 
 import 'common.dart';
@@ -13,12 +9,14 @@ void main() {
   group('InitBuilder', () {
     testWidgets('Basic getter', (tester) async {
       var getterCount = 42;
+      var disposerCount = 0;
 
       int getInt() => getterCount++;
 
       await tester.pumpWidget(buildFrame(InitBuilder<int>(
         getter: getInt,
         builder: (context, value) => Text('$value'),
+        disposer: (e) => disposerCount += e,
       )));
 
       expect(tester.widget<Text>(findText).data, equals('42'));
@@ -28,6 +26,7 @@ void main() {
       await tester.pumpWidget(buildFrame(InitBuilder<int>(
         getter: getInt,
         builder: (context, value) => Text('$value'),
+        disposer: (e) => disposerCount += e,
       )));
 
       expect(tester.widget<Text>(findText).data, equals('42'));
@@ -39,13 +38,26 @@ void main() {
       await tester.pumpWidget(buildFrame(InitBuilder<int>(
         getter: getInt2,
         builder: (context, value) => Text('$value'),
+        disposer: (e) => disposerCount += e,
       )));
 
       expect(tester.widget<Text>(findText).data, equals('43'));
+
+      /// Make sure disposer works
+
+      await tester.pumpWidget(const SizedBox());
+
+      expect(disposerCount, equals(43));
     });
 
     testWidgets('Arg getter', (tester) async {
       var getterCount = 0;
+      String disposedValue;
+
+      void disposer(String value) {
+        expect(disposedValue, isNull);
+        disposedValue = value;
+      }
 
       String getString(String prefix, int offset) =>
         '$prefix${offset + getterCount++}';
@@ -55,6 +67,7 @@ void main() {
         arg1: 'foo',
         arg2: 42,
         builder: (context, value) => Text(value),
+        disposer: disposer,
       )));
 
       expect(tester.widget<Text>(findText).data, equals('foo42'));
@@ -66,6 +79,7 @@ void main() {
         arg1: 'foo',
         arg2: 42,
         builder: (context, value) => Text(value),
+        disposer: disposer,
       )));
 
       expect(tester.widget<Text>(findText).data, equals('foo42'));
@@ -77,9 +91,16 @@ void main() {
         arg1: 'foobar',
         arg2: 42,
         builder: (context, value) => Text(value),
+        disposer: disposer,
       )));
 
       expect(tester.widget<Text>(findText).data, equals('foobar43'));
+
+      /// Make sure disposer works
+
+      await tester.pumpWidget(const SizedBox());
+
+      expect(disposedValue, equals('foobar43'));
     });
   });
 }

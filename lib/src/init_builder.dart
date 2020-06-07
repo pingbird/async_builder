@@ -4,10 +4,10 @@ import 'common.dart';
 /// A widget that initializes a value only when its configuration changes,
 /// useful for safe creation of async tasks.
 ///
-/// The default constructor takes a `getter` and `builder`, the `getter`
-/// is called to initialize the value used in `builder`. In this case InitBuilder
-/// only re-initializes the value if the `getter` function changes, you should
-/// not pass it an anonymous function directly.
+/// The default constructor takes a `getter`, `builder`, and `disposer`. The
+/// `getter` function is called to initialize the value used in `builder`. In
+/// this case InitBuilder only re-initializes the value if the `getter` function
+/// changes, you should not pass it an anonymous function directly.
 ///
 /// Alternative constructors [InitBuilder.arg] to [InitBuilder.arg7] can be used
 /// to pass arguments to the `getter`, these will re-initialize the value if
@@ -47,17 +47,28 @@ abstract class InitBuilder<T> extends StatefulWidget {
   /// Builder that is called with a previously initialized value.
   final ValueBuilderFn<T> builder;
 
+  /// Function that is called with the value when the InitBuilder is being
+  /// disposed.
+  final ValueSetter<T> disposer;
+
   /// Factory constructor for a basic [InitBuilder].
   factory InitBuilder({
     Key key,
     @required ValueBuilderFn<T> builder,
     @required ValueGetter<T> getter,
-  }) => _GetterInitBuilder<T>(key: key, builder: builder, getter: getter);
+    ValueSetter<T> disposer,
+  }) => _GetterInitBuilder<T>(
+    key: key,
+    builder: builder,
+    getter: getter,
+    disposer: disposer,
+  );
 
   /// Base constructor for anything that implements [InitBuilder].
   const InitBuilder.base({
     Key key,
     @required this.builder,
+    this.disposer,
   }) : assert(builder != null), super(key: key);
 
   /// Constructor for one argument getters.
@@ -66,11 +77,13 @@ abstract class InitBuilder<T> extends StatefulWidget {
     @required ValueBuilderFn<T> builder,
     @required A arg,
     @required T Function(A) getter,
+    ValueSetter<T> disposer,
   }) => _ArgInitBuilder<T, A>(
     key: key,
     builder: builder,
     arg: arg,
     getter: getter,
+    disposer: disposer,
   );
 
   /// Constructor for two argument getters.
@@ -80,12 +93,14 @@ abstract class InitBuilder<T> extends StatefulWidget {
     @required A1 arg1,
     @required A2 arg2,
     @required T Function(A1, A2) getter,
+    ValueSetter<T> disposer,
   }) => _Arg2InitBuilder<T, A1, A2>(
     key: key,
     builder: builder,
     arg1: arg1,
     arg2: arg2,
     getter: getter,
+    disposer: disposer,
   );
 
   /// Constructor for three argument getters.
@@ -96,6 +111,7 @@ abstract class InitBuilder<T> extends StatefulWidget {
     @required A2 arg2,
     @required A3 arg3,
     @required T Function(A1, A2, A3) getter,
+    ValueSetter<T> disposer,
   }) => _Arg3InitBuilder<T, A1, A2, A3>(
     key: key,
     builder: builder,
@@ -103,6 +119,7 @@ abstract class InitBuilder<T> extends StatefulWidget {
     arg2: arg2,
     arg3: arg3,
     getter: getter,
+    disposer: disposer,
   );
 
   /// Constructor for four argument getters.
@@ -114,6 +131,7 @@ abstract class InitBuilder<T> extends StatefulWidget {
     @required A3 arg3,
     @required A4 arg4,
     @required T Function(A1, A2, A3, A4) getter,
+    ValueSetter<T> disposer,
   }) => _Arg4InitBuilder<T, A1, A2, A3, A4>(
     key: key,
     builder: builder,
@@ -122,6 +140,7 @@ abstract class InitBuilder<T> extends StatefulWidget {
     arg3: arg3,
     arg4: arg4,
     getter: getter,
+    disposer: disposer,
   );
 
   /// Constructor for five argument getters.
@@ -134,6 +153,7 @@ abstract class InitBuilder<T> extends StatefulWidget {
     @required A4 arg4,
     @required A5 arg5,
     @required T Function(A1, A2, A3, A4, A5) getter,
+    ValueSetter<T> disposer,
   }) => _Arg5InitBuilder<T, A1, A2, A3, A4, A5>(
     key: key,
     builder: builder,
@@ -143,6 +163,7 @@ abstract class InitBuilder<T> extends StatefulWidget {
     arg4: arg4,
     arg5: arg5,
     getter: getter,
+    disposer: disposer,
   );
 
   /// Constructor for six argument getters.
@@ -156,6 +177,7 @@ abstract class InitBuilder<T> extends StatefulWidget {
     @required A5 arg5,
     @required A6 arg6,
     @required T Function(A1, A2, A3, A4, A5, A6) getter,
+    ValueSetter<T> disposer,
   }) => _Arg6InitBuilder<T, A1, A2, A3, A4, A5, A6>(
     key: key,
     builder: builder,
@@ -166,6 +188,7 @@ abstract class InitBuilder<T> extends StatefulWidget {
     arg5: arg5,
     arg6: arg6,
     getter: getter,
+    disposer: disposer,
   );
 
   /// Constructor for seven argument getters.
@@ -180,6 +203,7 @@ abstract class InitBuilder<T> extends StatefulWidget {
     @required A6 arg6,
     @required A7 arg7,
     @required T Function(A1, A2, A3, A4, A5, A6, A7) getter,
+    ValueSetter<T> disposer,
   }) => _Arg7InitBuilder<T, A1, A2, A3, A4, A5, A6, A7>(
     key: key,
     builder: builder,
@@ -191,6 +215,7 @@ abstract class InitBuilder<T> extends StatefulWidget {
     arg6: arg6,
     arg7: arg7,
     getter: getter,
+    disposer: disposer,
   );
 
   /// Called by the widget state to initialize the value.
@@ -210,8 +235,9 @@ class _GetterInitBuilder<T> extends InitBuilder<T> {
     Key key,
     @required ValueBuilderFn<T> builder,
     @required this.getter,
+    ValueSetter<T> disposer,
   }) : assert(getter != null),
-       super.base(key: key, builder: builder);
+       super.base(key: key, builder: builder, disposer: disposer);
 
   @override
   T initValue() => getter();
@@ -230,8 +256,9 @@ class _ArgInitBuilder<T, A> extends InitBuilder<T> {
     @required ValueBuilderFn<T> builder,
     @required this.arg,
     @required this.getter,
+    ValueSetter<T> disposer,
   }) : assert(getter != null),
-       super.base(key: key, builder: builder);
+       super.base(key: key, builder: builder, disposer: disposer);
 
   @override
   T initValue() => getter(arg);
@@ -253,8 +280,9 @@ class _Arg2InitBuilder<T, A1, A2> extends InitBuilder<T> {
     @required this.arg1,
     @required this.arg2,
     @required this.getter,
+    ValueSetter<T> disposer,
   }) : assert(getter != null),
-       super.base(key: key, builder: builder);
+       super.base(key: key, builder: builder, disposer: disposer);
 
   @override
   T initValue() => getter(arg1, arg2);
@@ -279,8 +307,9 @@ class _Arg3InitBuilder<T, A1, A2, A3> extends InitBuilder<T> {
     @required this.arg2,
     @required this.arg3,
     @required this.getter,
+    ValueSetter<T> disposer,
   }) : assert(getter != null),
-       super.base(key: key, builder: builder);
+       super.base(key: key, builder: builder, disposer: disposer);
 
   @override
   T initValue() => getter(arg1, arg2, arg3);
@@ -308,8 +337,9 @@ class _Arg4InitBuilder<T, A1, A2, A3, A4> extends InitBuilder<T> {
     @required this.arg3,
     @required this.arg4,
     @required this.getter,
+    ValueSetter<T> disposer,
   }) : assert(getter != null),
-       super.base(key: key, builder: builder);
+       super.base(key: key, builder: builder, disposer: disposer);
 
   @override
   T initValue() => getter(arg1, arg2, arg3, arg4);
@@ -340,8 +370,9 @@ class _Arg5InitBuilder<T, A1, A2, A3, A4, A5> extends InitBuilder<T> {
     @required this.arg4,
     @required this.arg5,
     @required this.getter,
+    ValueSetter<T> disposer,
   }) : assert(getter != null),
-       super.base(key: key, builder: builder);
+       super.base(key: key, builder: builder, disposer: disposer);
 
   @override
   T initValue() => getter(arg1, arg2, arg3, arg4, arg5);
@@ -375,8 +406,9 @@ class _Arg6InitBuilder<T, A1, A2, A3, A4, A5, A6> extends InitBuilder<T> {
     @required this.arg5,
     @required this.arg6,
     @required this.getter,
+    ValueSetter<T> disposer,
   }) : assert(getter != null),
-       super.base(key: key, builder: builder);
+       super.base(key: key, builder: builder, disposer: disposer);
 
   @override
   T initValue() => getter(arg1, arg2, arg3, arg4, arg5, arg6);
@@ -413,8 +445,9 @@ class _Arg7InitBuilder<T, A1, A2, A3, A4, A5, A6, A7> extends InitBuilder<T> {
     @required this.arg6,
     @required this.arg7,
     @required this.getter,
+    ValueSetter<T> disposer,
   }) : assert(getter != null),
-       super.base(key: key, builder: builder);
+       super.base(key: key, builder: builder, disposer: disposer);
 
   @override
   T initValue() => getter(arg1, arg2, arg3, arg4, arg5, arg6, arg7);
@@ -450,4 +483,13 @@ class _InitBuilderState<T> extends State<InitBuilder<T>> {
 
   @override
   Widget build(BuildContext context) => widget.builder(context, value);
+
+  @override
+  void dispose() {
+    if (widget.disposer != null) {
+      widget.disposer(value);
+    }
+
+    super.dispose();
+  }
 }
