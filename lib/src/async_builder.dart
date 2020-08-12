@@ -19,6 +19,10 @@ import 'common.dart';
 /// If [initial] is provided, it is used in place of the value before one is
 /// available.
 ///
+/// If [retain] is true, the current value is retained when the [stream] or
+/// [future] instances change. Otherwise when [retain] is false or omitted, the
+/// value is reset.
+///
 /// If the asynchronous operation completes with an error this builds [error].
 /// If [error] is not provided [reportError] is called with the [FlutterErrorDetails].
 ///
@@ -73,6 +77,10 @@ class AsyncBuilder<T> extends StatefulWidget {
   /// The initial value used before one is available.
   final T initial;
 
+  /// Whether or not the current value should be retained when the [stream] or
+  /// [future] instances change.
+  final bool retain;
+
   /// Whether or not to suppress printing errors to the console.
   final bool silent;
 
@@ -92,6 +100,7 @@ class AsyncBuilder<T> extends StatefulWidget {
     this.future,
     this.stream,
     this.initial,
+    this.retain = false,
     this.pause = false,
     bool silent,
     ErrorReporterFn reportError,
@@ -100,6 +109,7 @@ class AsyncBuilder<T> extends StatefulWidget {
        assert(builder != null),
        assert(!((future != null) && (stream != null)), 'AsyncBuilder should be given either a stream or future'),
        assert(future == null || closed == null, 'AsyncBuilder should not be given both a future and closed builder'),
+       assert(retain != null),
        assert(pause != null),
        super(key: key);
 
@@ -116,10 +126,12 @@ class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
   StreamSubscription _subscription;
 
   void _cancel() {
-    _lastValue = null;
-    _lastError = null;
-    _lastStackTrace = null;
-    _hasFired = false;
+    if (!widget.retain) {
+      _lastValue = null;
+      _lastError = null;
+      _lastStackTrace = null;
+      _hasFired = false;
+    }
     _isClosed = false;
     _subscription?.cancel();
     _subscription = null;

@@ -376,5 +376,48 @@ void main() {
 
       expect(reportedErrors, isEmpty);
     });
+
+    testWidgets('Retains value', (tester) async {
+      reportedErrors.clear();
+
+      final ctrl = Completer<String>();
+      final ctrl2 = Completer<String>();
+
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
+        future: ctrl.future,
+        retain: true,
+        waiting: (context) => const Text('waiting'),
+        builder: (context, value) => Text('$value'),
+        reportError: reportError,
+      )));
+
+      expect(tester.widget<Text>(findText).data, equals('waiting'));
+
+      ctrl.complete('hello');
+      await tester.pump(Duration.zero);
+
+      expect(tester.widget<Text>(findText).data, equals('hello'));
+
+      await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
+        future: ctrl2.future,
+        retain: true,
+        waiting: (context) => const Text('waiting'),
+        builder: (context, value) => Text('$value'),
+        reportError: reportError,
+      )));
+
+      expect(tester.widget<Text>(findText).data, equals('hello'));
+
+      await tester.pump(Duration.zero);
+
+      expect(tester.widget<Text>(findText).data, equals('hello'));
+
+      ctrl2.complete('world');
+      await tester.pump(Duration.zero);
+
+      expect(tester.widget<Text>(findText).data, equals('world'));
+
+      expect(reportedErrors, isEmpty);
+    });
   });
 }
