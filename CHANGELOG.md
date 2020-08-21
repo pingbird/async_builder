@@ -1,3 +1,7 @@
+## [1.2.1]
+
+* Added retain flag to AsyncBuilder
+
 ## [1.2.0]
 
 * Implemented InitBuilder
