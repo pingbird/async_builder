@@ -67,9 +67,11 @@ class _AsyncTestChild1State extends State<AsyncTestChild1> {
       title: 'Random Numbers - Future',
       desc: 'This example completes a future with a random number after 2 seconds.',
       child: Row(children: [
-        RaisedButton(
-          color: Colors.blue,
-          textColor: Colors.white,
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.blue,
+            textStyle: const TextStyle(color: Colors.white),
+          ),
           child: const Text('Generate'),
           onPressed: () {
             setState(() {
@@ -111,9 +113,11 @@ class _AsyncTestChild2State extends State<AsyncTestChild2> {
       title: 'Random Numbers - Stream',
       desc: 'This example adds a random number to a stream after 1 second.',
       child: Row(children: [
-        RaisedButton(
-          color: Colors.blue,
-          textColor: Colors.white,
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.blue,
+            textStyle: const TextStyle(color: Colors.white),
+          ),
           child: const Text('Reset'),
           onPressed: randomNumber == null ? null : () {
             setState(() {
@@ -122,9 +126,11 @@ class _AsyncTestChild2State extends State<AsyncTestChild2> {
           },
         ),
         const Padding(padding: EdgeInsets.only(right: 8)),
-        RaisedButton(
-          color: Colors.blue,
-          textColor: Colors.white,
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.blue,
+            textStyle: const TextStyle(color: Colors.white),
+          ),
           child: const Text('Add'),
           onPressed: () async {
             if (randomNumber == null) initController();
@@ -172,16 +178,20 @@ class _AsyncTestChild3State extends State<AsyncTestChild3> {
       title: 'Random Numbers - Closing',
       desc: 'This example continuously adds numbers to a stream until it is closed.',
       child: Row(children: [
-        RaisedButton(
-          color: Colors.blue,
-          textColor: Colors.white,
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.blue,
+            textStyle: const TextStyle(color: Colors.white),
+          ),
           child: Text(randomNumber == null ? 'Start' : 'Restart'),
           onPressed: initController,
         ),
         const Padding(padding: EdgeInsets.only(right: 8)),
-        RaisedButton(
-          color: Colors.blue,
-          textColor: Colors.white,
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.blue,
+            textStyle: const TextStyle(color: Colors.white),
+          ),
           child: const Text('Close'),
           onPressed: randomNumber == null || randomNumber.isClosed ? null : () {
             setState(() {
@@ -240,9 +250,11 @@ class _AsyncTestChild4State extends State<AsyncTestChild4> {
       title: 'Random Numbers - Pausing',
       desc: 'This example continuously adds numbers to a stream but allows the subscription to be paused.',
       child: Row(children: [
-        RaisedButton(
-          color: Colors.blue,
-          textColor: Colors.white,
+        ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            primary: Colors.blue,
+            textStyle: const TextStyle(color: Colors.white),
+          ),
           child: Text(randomNumber == null ? 'Start' : 'Restart'),
           onPressed: initController,
         ),

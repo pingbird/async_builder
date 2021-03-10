@@ -56,26 +56,26 @@ import 'common.dart';
 /// ```
 class AsyncBuilder<T> extends StatefulWidget {
   /// The builder that should be called when no data is available.
-  final WidgetBuilder waiting;
+  final WidgetBuilder? waiting;
 
   /// The default value builder.
   final ValueBuilderFn<T> builder;
 
   /// The builder that should be called when an error was thrown by the future
   /// or stream.
-  final ErrorBuilderFn error;
+  final ErrorBuilderFn? error;
 
   /// The builder that should be called when the stream is closed.
-  final ValueBuilderFn<T> closed;
+  final ValueBuilderFn<T>? closed;
 
   /// If provided, this is the future the widget listens to.
-  final Future<T> future;
+  final Future<T>? future;
 
   /// If provided, this is the stream the widget listens to.
-  final Stream<T> stream;
+  final Stream<T>? stream;
 
   /// The initial value used before one is available.
-  final T initial;
+  final T? initial;
 
   /// Whether or not the current value should be retained when the [stream] or
   /// [future] instances change.
@@ -92,9 +92,9 @@ class AsyncBuilder<T> extends StatefulWidget {
 
   /// Creates a widget that builds depending on the state of a [Future] or [Stream].
   const AsyncBuilder({
-    Key key,
+    Key? key,
     this.waiting,
-    @required this.builder,
+    required this.builder,
     this.error,
     this.closed,
     this.future,
@@ -102,15 +102,12 @@ class AsyncBuilder<T> extends StatefulWidget {
     this.initial,
     this.retain = false,
     this.pause = false,
-    bool silent,
-    ErrorReporterFn reportError,
+    bool? silent,
+    ErrorReporterFn? reportError,
   }) : silent = silent ?? error != null,
        reportError = reportError ?? FlutterError.reportError,
-       assert(builder != null),
        assert(!((future != null) && (stream != null)), 'AsyncBuilder should be given either a stream or future'),
        assert(future == null || closed == null, 'AsyncBuilder should not be given both a future and closed builder'),
-       assert(retain != null),
-       assert(pause != null),
        super(key: key);
 
   @override
@@ -118,12 +115,12 @@ class AsyncBuilder<T> extends StatefulWidget {
 }
 
 class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
-  T _lastValue;
-  Object _lastError;
-  StackTrace _lastStackTrace;
+  T? _lastValue;
+  Object? _lastError;
+  StackTrace? _lastStackTrace;
   bool _hasFired = false;
   bool _isClosed = false;
-  StreamSubscription _subscription;
+  StreamSubscription? _subscription;
 
   void _cancel() {
     if (!widget.retain) {
@@ -137,7 +134,7 @@ class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
     _subscription = null;
   }
 
-  void _handleError(Object error, StackTrace stackTrace) {
+  void _handleError(Object error, StackTrace? stackTrace) {
     _lastError = error;
     _lastStackTrace = stackTrace;
     if (widget.error != null && mounted) {
@@ -154,7 +151,7 @@ class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
 
   void _initFuture() {
     _cancel();
-    final future = widget.future;
+    final Future<T> future = widget.future!;
     future.then((T value) {
       if (future != widget.future || !mounted) return; // Skip if future changed
       setState(() {
@@ -166,17 +163,17 @@ class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
 
   void _updatePause() {
     if (_subscription != null) {
-      if (widget.pause && !_subscription.isPaused) {
-        _subscription.pause();
-      } else if (!widget.pause && _subscription.isPaused) {
-        _subscription.resume();
+      if (widget.pause && !_subscription!.isPaused) {
+        _subscription!.pause();
+      } else if (!widget.pause && _subscription!.isPaused) {
+        _subscription!.resume();
       }
     }
   }
 
   void _initStream() {
     _cancel();
-    final stream = widget.stream;
+    final Stream<T> stream = widget.stream!;
     var skipFirst = false;
     if (stream is ValueStream<T> && stream.hasValue) {
       skipFirst = true;
@@ -234,15 +231,15 @@ class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
   @override
   Widget build(BuildContext context) {
     if (_lastError != null && widget.error != null) {
-      return widget.error(context, _lastError, _lastStackTrace);
+      return widget.error!(context, _lastError!, _lastStackTrace);
     }
 
     if (_isClosed && widget.closed != null) {
-      return widget.closed(context, _hasFired ? _lastValue : widget.initial);
+      return widget.closed!(context, _hasFired ? _lastValue : widget.initial);
     }
 
     if (!_hasFired && widget.waiting != null) {
-      return widget.waiting(context);
+      return widget.waiting!(context);
     }
 
     return widget.builder(context, _hasFired ? _lastValue : widget.initial);

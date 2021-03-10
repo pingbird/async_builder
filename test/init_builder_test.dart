@@ -52,7 +52,7 @@ void main() {
 
     testWidgets('Arg getter', (tester) async {
       var getterCount = 0;
-      String disposedValue;
+      String? disposedValue;
 
       void disposer(String value) {
         expect(disposedValue, isNull);
@@ -66,7 +66,7 @@ void main() {
         getter: getString,
         arg1: 'foo',
         arg2: 42,
-        builder: (context, value) => Text(value),
+        builder: (context, value) => Text(value!),
         disposer: disposer,
       )));
 
@@ -78,7 +78,7 @@ void main() {
         getter: getString,
         arg1: 'foo',
         arg2: 42,
-        builder: (context, value) => Text(value),
+        builder: (context, value) => Text(value!),
         disposer: disposer,
       )));
 
@@ -90,7 +90,7 @@ void main() {
         getter: getString,
         arg1: 'foobar',
         arg2: 42,
-        builder: (context, value) => Text(value),
+        builder: (context, value) => Text(value!),
         disposer: disposer,
       )));
 

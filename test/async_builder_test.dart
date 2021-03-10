@@ -286,7 +286,7 @@ void main() {
 
     testWidgets('BehaviorSubject', (tester) async {
       reportedErrors.clear();
-      final ctrl = BehaviorSubject<String>();
+      final ctrl = BehaviorSubject.seeded('initial');
 
       await tester.pumpWidget(buildFrame(AsyncBuilder<String>(
         initial: 'waiting',
@@ -295,7 +295,7 @@ void main() {
         reportError: reportError,
       )));
 
-      expect(tester.widget<Text>(findText).data, equals('waiting'));
+      expect(tester.widget<Text>(findText).data, equals('initial'));
 
       ctrl.add('foo');
 

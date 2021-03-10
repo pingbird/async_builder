@@ -1,3 +1,7 @@
+## [1.3]
+
+* Migrated to null safety
+
 ## [1.2.1]
 
 * Added retain flag to AsyncBuilder
