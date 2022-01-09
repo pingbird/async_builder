@@ -60,7 +60,7 @@ void main() {
       }
 
       String getString(String prefix, int offset) =>
-        '$prefix${offset + getterCount++}';
+          '$prefix${offset + getterCount++}';
 
       await tester.pumpWidget(buildFrame(InitBuilder.arg2<String, String, int>(
         getter: getString,

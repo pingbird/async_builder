@@ -57,12 +57,13 @@ abstract class InitBuilder<T> extends StatefulWidget {
     required ValueBuilderFn<T> builder,
     required ValueGetter<T> getter,
     ValueSetter<T>? disposer,
-  }) => _GetterInitBuilder<T>(
-    key: key,
-    builder: builder,
-    getter: getter,
-    disposer: disposer,
-  );
+  }) =>
+      _GetterInitBuilder<T>(
+        key: key,
+        builder: builder,
+        getter: getter,
+        disposer: disposer,
+      );
 
   /// Base constructor for anything that implements [InitBuilder].
   const InitBuilder.base({
@@ -78,13 +79,14 @@ abstract class InitBuilder<T> extends StatefulWidget {
     required A arg,
     required T Function(A) getter,
     ValueSetter<T>? disposer,
-  }) => _ArgInitBuilder<T, A>(
-    key: key,
-    builder: builder,
-    arg: arg,
-    getter: getter,
-    disposer: disposer,
-  );
+  }) =>
+      _ArgInitBuilder<T, A>(
+        key: key,
+        builder: builder,
+        arg: arg,
+        getter: getter,
+        disposer: disposer,
+      );
 
   /// Constructor for two argument getters.
   static InitBuilder<T> arg2<T, A1, A2>({
@@ -94,14 +96,15 @@ abstract class InitBuilder<T> extends StatefulWidget {
     required A2 arg2,
     required T Function(A1, A2) getter,
     ValueSetter<T>? disposer,
-  }) => _Arg2InitBuilder<T, A1, A2>(
-    key: key,
-    builder: builder,
-    arg1: arg1,
-    arg2: arg2,
-    getter: getter,
-    disposer: disposer,
-  );
+  }) =>
+      _Arg2InitBuilder<T, A1, A2>(
+        key: key,
+        builder: builder,
+        arg1: arg1,
+        arg2: arg2,
+        getter: getter,
+        disposer: disposer,
+      );
 
   /// Constructor for three argument getters.
   static InitBuilder<T> arg3<T, A1, A2, A3>({
@@ -112,15 +115,16 @@ abstract class InitBuilder<T> extends StatefulWidget {
     required A3 arg3,
     required T Function(A1, A2, A3) getter,
     ValueSetter<T>? disposer,
-  }) => _Arg3InitBuilder<T, A1, A2, A3>(
-    key: key,
-    builder: builder,
-    arg1: arg1,
-    arg2: arg2,
-    arg3: arg3,
-    getter: getter,
-    disposer: disposer,
-  );
+  }) =>
+      _Arg3InitBuilder<T, A1, A2, A3>(
+        key: key,
+        builder: builder,
+        arg1: arg1,
+        arg2: arg2,
+        arg3: arg3,
+        getter: getter,
+        disposer: disposer,
+      );
 
   /// Constructor for four argument getters.
   static InitBuilder<T> arg4<T, A1, A2, A3, A4>({
@@ -132,16 +136,17 @@ abstract class InitBuilder<T> extends StatefulWidget {
     required A4 arg4,
     required T Function(A1, A2, A3, A4) getter,
     ValueSetter<T>? disposer,
-  }) => _Arg4InitBuilder<T, A1, A2, A3, A4>(
-    key: key,
-    builder: builder,
-    arg1: arg1,
-    arg2: arg2,
-    arg3: arg3,
-    arg4: arg4,
-    getter: getter,
-    disposer: disposer,
-  );
+  }) =>
+      _Arg4InitBuilder<T, A1, A2, A3, A4>(
+        key: key,
+        builder: builder,
+        arg1: arg1,
+        arg2: arg2,
+        arg3: arg3,
+        arg4: arg4,
+        getter: getter,
+        disposer: disposer,
+      );
 
   /// Constructor for five argument getters.
   static InitBuilder<T> arg5<T, A1, A2, A3, A4, A5>({
@@ -154,17 +159,18 @@ abstract class InitBuilder<T> extends StatefulWidget {
     required A5 arg5,
     required T Function(A1, A2, A3, A4, A5) getter,
     ValueSetter<T>? disposer,
-  }) => _Arg5InitBuilder<T, A1, A2, A3, A4, A5>(
-    key: key,
-    builder: builder,
-    arg1: arg1,
-    arg2: arg2,
-    arg3: arg3,
-    arg4: arg4,
-    arg5: arg5,
-    getter: getter,
-    disposer: disposer,
-  );
+  }) =>
+      _Arg5InitBuilder<T, A1, A2, A3, A4, A5>(
+        key: key,
+        builder: builder,
+        arg1: arg1,
+        arg2: arg2,
+        arg3: arg3,
+        arg4: arg4,
+        arg5: arg5,
+        getter: getter,
+        disposer: disposer,
+      );
 
   /// Constructor for six argument getters.
   static InitBuilder<T> arg6<T, A1, A2, A3, A4, A5, A6>({
@@ -178,18 +184,19 @@ abstract class InitBuilder<T> extends StatefulWidget {
     required A6 arg6,
     required T Function(A1, A2, A3, A4, A5, A6) getter,
     ValueSetter<T>? disposer,
-  }) => _Arg6InitBuilder<T, A1, A2, A3, A4, A5, A6>(
-    key: key,
-    builder: builder,
-    arg1: arg1,
-    arg2: arg2,
-    arg3: arg3,
-    arg4: arg4,
-    arg5: arg5,
-    arg6: arg6,
-    getter: getter,
-    disposer: disposer,
-  );
+  }) =>
+      _Arg6InitBuilder<T, A1, A2, A3, A4, A5, A6>(
+        key: key,
+        builder: builder,
+        arg1: arg1,
+        arg2: arg2,
+        arg3: arg3,
+        arg4: arg4,
+        arg5: arg5,
+        arg6: arg6,
+        getter: getter,
+        disposer: disposer,
+      );
 
   /// Constructor for seven argument getters.
   static InitBuilder<T> arg7<T, A1, A2, A3, A4, A5, A6, A7>({
@@ -204,19 +211,20 @@ abstract class InitBuilder<T> extends StatefulWidget {
     required A7 arg7,
     required T Function(A1, A2, A3, A4, A5, A6, A7) getter,
     ValueSetter<T>? disposer,
-  }) => _Arg7InitBuilder<T, A1, A2, A3, A4, A5, A6, A7>(
-    key: key,
-    builder: builder,
-    arg1: arg1,
-    arg2: arg2,
-    arg3: arg3,
-    arg4: arg4,
-    arg5: arg5,
-    arg6: arg6,
-    arg7: arg7,
-    getter: getter,
-    disposer: disposer,
-  );
+  }) =>
+      _Arg7InitBuilder<T, A1, A2, A3, A4, A5, A6, A7>(
+        key: key,
+        builder: builder,
+        arg1: arg1,
+        arg2: arg2,
+        arg3: arg3,
+        arg4: arg4,
+        arg5: arg5,
+        arg6: arg6,
+        arg7: arg7,
+        getter: getter,
+        disposer: disposer,
+      );
 
   /// Called by the widget state to initialize the value.
   T initValue();
@@ -242,8 +250,7 @@ class _GetterInitBuilder<T> extends InitBuilder<T> {
   T initValue() => getter();
 
   @override
-  bool shouldInit(_GetterInitBuilder<T> other) =>
-    getter != other.getter;
+  bool shouldInit(_GetterInitBuilder<T> other) => getter != other.getter;
 }
 
 class _ArgInitBuilder<T, A> extends InitBuilder<T> {
@@ -263,8 +270,7 @@ class _ArgInitBuilder<T, A> extends InitBuilder<T> {
 
   @override
   bool shouldInit(_ArgInitBuilder<T, A> other) =>
-    arg != other.arg ||
-    getter != other.getter;
+      arg != other.arg || getter != other.getter;
 }
 
 class _Arg2InitBuilder<T, A1, A2> extends InitBuilder<T> {
@@ -286,9 +292,7 @@ class _Arg2InitBuilder<T, A1, A2> extends InitBuilder<T> {
 
   @override
   bool shouldInit(_Arg2InitBuilder<T, A1, A2> other) =>
-    arg1 != other.arg1 ||
-    arg2 != other.arg2 ||
-    getter != other.getter;
+      arg1 != other.arg1 || arg2 != other.arg2 || getter != other.getter;
 }
 
 class _Arg3InitBuilder<T, A1, A2, A3> extends InitBuilder<T> {
@@ -312,10 +316,10 @@ class _Arg3InitBuilder<T, A1, A2, A3> extends InitBuilder<T> {
 
   @override
   bool shouldInit(_Arg3InitBuilder<T, A1, A2, A3> other) =>
-    arg1 != other.arg1 ||
-    arg2 != other.arg2 ||
-    arg3 != other.arg3 ||
-    getter != other.getter;
+      arg1 != other.arg1 ||
+      arg2 != other.arg2 ||
+      arg3 != other.arg3 ||
+      getter != other.getter;
 }
 
 class _Arg4InitBuilder<T, A1, A2, A3, A4> extends InitBuilder<T> {
@@ -341,11 +345,11 @@ class _Arg4InitBuilder<T, A1, A2, A3, A4> extends InitBuilder<T> {
 
   @override
   bool shouldInit(_Arg4InitBuilder<T, A1, A2, A3, A4> other) =>
-    arg1 != other.arg1 ||
-    arg2 != other.arg2 ||
-    arg3 != other.arg3 ||
-    arg4 != other.arg4 ||
-    getter != other.getter;
+      arg1 != other.arg1 ||
+      arg2 != other.arg2 ||
+      arg3 != other.arg3 ||
+      arg4 != other.arg4 ||
+      getter != other.getter;
 }
 
 class _Arg5InitBuilder<T, A1, A2, A3, A4, A5> extends InitBuilder<T> {
@@ -373,12 +377,12 @@ class _Arg5InitBuilder<T, A1, A2, A3, A4, A5> extends InitBuilder<T> {
 
   @override
   bool shouldInit(_Arg5InitBuilder<T, A1, A2, A3, A4, A5> other) =>
-    arg1 != other.arg1 ||
-    arg2 != other.arg2 ||
-    arg3 != other.arg3 ||
-    arg4 != other.arg4 ||
-    arg5 != other.arg5 ||
-    getter != other.getter;
+      arg1 != other.arg1 ||
+      arg2 != other.arg2 ||
+      arg3 != other.arg3 ||
+      arg4 != other.arg4 ||
+      arg5 != other.arg5 ||
+      getter != other.getter;
 }
 
 class _Arg6InitBuilder<T, A1, A2, A3, A4, A5, A6> extends InitBuilder<T> {
@@ -408,13 +412,13 @@ class _Arg6InitBuilder<T, A1, A2, A3, A4, A5, A6> extends InitBuilder<T> {
 
   @override
   bool shouldInit(_Arg6InitBuilder<T, A1, A2, A3, A4, A5, A6> other) =>
-    arg1 != other.arg1 ||
-    arg2 != other.arg2 ||
-    arg3 != other.arg3 ||
-    arg4 != other.arg4 ||
-    arg5 != other.arg5 ||
-    arg6 != other.arg6 ||
-    getter != other.getter;
+      arg1 != other.arg1 ||
+      arg2 != other.arg2 ||
+      arg3 != other.arg3 ||
+      arg4 != other.arg4 ||
+      arg5 != other.arg5 ||
+      arg6 != other.arg6 ||
+      getter != other.getter;
 }
 
 class _Arg7InitBuilder<T, A1, A2, A3, A4, A5, A6, A7> extends InitBuilder<T> {
@@ -446,14 +450,14 @@ class _Arg7InitBuilder<T, A1, A2, A3, A4, A5, A6, A7> extends InitBuilder<T> {
 
   @override
   bool shouldInit(_Arg7InitBuilder<T, A1, A2, A3, A4, A5, A6, A7> other) =>
-    arg1 != other.arg1 ||
-    arg2 != other.arg2 ||
-    arg3 != other.arg3 ||
-    arg4 != other.arg4 ||
-    arg5 != other.arg5 ||
-    arg6 != other.arg6 ||
-    arg7 != other.arg7 ||
-    getter != other.getter;
+      arg1 != other.arg1 ||
+      arg2 != other.arg2 ||
+      arg3 != other.arg3 ||
+      arg4 != other.arg4 ||
+      arg5 != other.arg5 ||
+      arg6 != other.arg6 ||
+      arg7 != other.arg7 ||
+      getter != other.getter;
 }
 
 class _InitBuilderState<T> extends State<InitBuilder<T>> {

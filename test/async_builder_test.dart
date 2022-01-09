@@ -265,7 +265,8 @@ void main() {
       reportedErrors.clear();
     });
 
-    testWidgets('Future errors after dispose with error builder', (tester) async {
+    testWidgets('Future errors after dispose with error builder',
+        (tester) async {
       reportedErrors.clear();
       final ctrl = Completer<String>();
 
@@ -427,10 +428,13 @@ void main() {
       final ctrl = Completer<String>();
 
       bool getKeepAlive() {
-        final keepAliveElement = find.byElementPredicate(
-          (e) => e.widget is KeepAlive,
-          skipOffstage: false,
-        ).evaluate().single;
+        final keepAliveElement = find
+            .byElementPredicate(
+              (e) => e.widget is KeepAlive,
+              skipOffstage: false,
+            )
+            .evaluate()
+            .single;
         final renderObject = keepAliveElement.findRenderObject()!;
         return (renderObject.parentData as KeepAliveParentDataMixin).keepAlive;
       }

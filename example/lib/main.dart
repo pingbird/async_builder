@@ -65,7 +65,8 @@ class _AsyncTestChild1State extends State<AsyncTestChild1> {
     final textTheme = theme.textTheme;
     return TestCard(
       title: 'Random Numbers - Future',
-      desc: 'This example completes a future with a random number after 2 seconds.',
+      desc:
+          'This example completes a future with a random number after 2 seconds.',
       child: Row(children: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -75,16 +76,18 @@ class _AsyncTestChild1State extends State<AsyncTestChild1> {
           child: const Text('Generate'),
           onPressed: () {
             setState(() {
-              randomNumber = Future.delayed(const Duration(seconds: 2), () => Random().nextInt(100));
+              randomNumber = Future.delayed(
+                  const Duration(seconds: 2), () => Random().nextInt(100));
             });
           },
         ),
         const Padding(padding: EdgeInsets.only(right: 16)),
-        if (randomNumber != null) AsyncBuilder<int>(
-          waiting: (context) => const CircularProgressIndicator(),
-          builder: (context, i) => Text('$i', style: textTheme.headline6),
-          future: randomNumber,
-        ),
+        if (randomNumber != null)
+          AsyncBuilder<int>(
+            waiting: (context) => const CircularProgressIndicator(),
+            builder: (context, i) => Text('$i', style: textTheme.headline6),
+            future: randomNumber,
+          ),
       ]),
     );
   }
@@ -119,11 +122,13 @@ class _AsyncTestChild2State extends State<AsyncTestChild2> {
             textStyle: const TextStyle(color: Colors.white),
           ),
           child: const Text('Reset'),
-          onPressed: randomNumber == null ? null : () {
-            setState(() {
-              randomNumber = null;
-            });
-          },
+          onPressed: randomNumber == null
+              ? null
+              : () {
+                  setState(() {
+                    randomNumber = null;
+                  });
+                },
         ),
         const Padding(padding: EdgeInsets.only(right: 8)),
         ElevatedButton(
@@ -140,11 +145,12 @@ class _AsyncTestChild2State extends State<AsyncTestChild2> {
           },
         ),
         const Padding(padding: EdgeInsets.only(right: 16)),
-        if (randomNumber != null) AsyncBuilder<int>(
-          waiting: (context) => const CircularProgressIndicator(),
-          builder: (context, i) => Text('$i', style: textTheme.headline6),
-          stream: randomNumber.stream,
-        ),
+        if (randomNumber != null)
+          AsyncBuilder<int>(
+            waiting: (context) => const CircularProgressIndicator(),
+            builder: (context, i) => Text('$i', style: textTheme.headline6),
+            stream: randomNumber.stream,
+          ),
       ]),
     );
   }
@@ -176,7 +182,8 @@ class _AsyncTestChild3State extends State<AsyncTestChild3> {
     final textTheme = theme.textTheme;
     return TestCard(
       title: 'Random Numbers - Closing',
-      desc: 'This example continuously adds numbers to a stream until it is closed.',
+      desc:
+          'This example continuously adds numbers to a stream until it is closed.',
       child: Row(children: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -193,19 +200,23 @@ class _AsyncTestChild3State extends State<AsyncTestChild3> {
             textStyle: const TextStyle(color: Colors.white),
           ),
           child: const Text('Close'),
-          onPressed: randomNumber == null || randomNumber.isClosed ? null : () {
-            setState(() {
-              randomNumber.close();
-            });
-          },
+          onPressed: randomNumber == null || randomNumber.isClosed
+              ? null
+              : () {
+                  setState(() {
+                    randomNumber.close();
+                  });
+                },
         ),
         const Padding(padding: EdgeInsets.only(right: 16)),
-        if (randomNumber != null) AsyncBuilder<int>(
-          waiting: (context) => const CircularProgressIndicator(),
-          builder: (context, i) => Text('$i', style: textTheme.headline6),
-          closed: (context, i) => Text('$i (Closed)', style: textTheme.headline6),
-          stream: randomNumber.stream,
-        ),
+        if (randomNumber != null)
+          AsyncBuilder<int>(
+            waiting: (context) => const CircularProgressIndicator(),
+            builder: (context, i) => Text('$i', style: textTheme.headline6),
+            closed: (context, i) =>
+                Text('$i (Closed)', style: textTheme.headline6),
+            stream: randomNumber.stream,
+          ),
       ]),
     );
   }
@@ -248,7 +259,8 @@ class _AsyncTestChild4State extends State<AsyncTestChild4> {
     final textTheme = theme.textTheme;
     return TestCard(
       title: 'Random Numbers - Pausing',
-      desc: 'This example continuously adds numbers to a stream but allows the subscription to be paused.',
+      desc:
+          'This example continuously adds numbers to a stream but allows the subscription to be paused.',
       child: Row(children: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
@@ -260,18 +272,22 @@ class _AsyncTestChild4State extends State<AsyncTestChild4> {
         ),
         const Padding(padding: EdgeInsets.only(right: 16)),
         Text('Pause', style: textTheme.subtitle2),
-        Switch(value: pause, onChanged: (b) {
-          setState(() {
-            pause = b;
-          });
-        }, activeColor: Colors.blue),
+        Switch(
+            value: pause,
+            onChanged: (b) {
+              setState(() {
+                pause = b;
+              });
+            },
+            activeColor: Colors.blue),
         const Padding(padding: EdgeInsets.only(right: 16)),
-        if (randomNumber != null) AsyncBuilder<int>(
-          waiting: (context) => const CircularProgressIndicator(),
-          builder: (context, i) => Text('$i', style: textTheme.headline6),
-          stream: randomNumber.stream,
-          pause: pause,
-        ),
+        if (randomNumber != null)
+          AsyncBuilder<int>(
+            waiting: (context) => const CircularProgressIndicator(),
+            builder: (context, i) => Text('$i', style: textTheme.headline6),
+            stream: randomNumber.stream,
+            pause: pause,
+          ),
       ]),
     );
   }
@@ -289,19 +305,21 @@ class TestCard extends StatelessWidget {
     final theme = Theme.of(context);
     final textTheme = theme.textTheme;
     return Card(
-      child: Padding(padding: const EdgeInsets.all(8), child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          Padding(
-            child: Text(title, style: textTheme.headline6),
-            padding: const EdgeInsets.symmetric(vertical: 8),
-          ),
-          const Divider(),
-          Text(desc, style: textTheme.subtitle1),
-          const Padding(padding: EdgeInsets.only(bottom: 16)),
-          child,
-        ],
-      )),
+      child: Padding(
+          padding: const EdgeInsets.all(8),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              Padding(
+                child: Text(title, style: textTheme.headline6),
+                padding: const EdgeInsets.symmetric(vertical: 8),
+              ),
+              const Divider(),
+              Text(desc, style: textTheme.subtitle1),
+              const Padding(padding: EdgeInsets.only(bottom: 16)),
+              child,
+            ],
+          )),
     );
   }
 }
