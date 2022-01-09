@@ -1,3 +1,7 @@
+## [1.3.1]
+
+* Added a keepAlive flag to AsyncBuilder
+
 ## [1.3.0]
 
 * Migrated to null safety
