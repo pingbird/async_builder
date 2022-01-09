@@ -1,10 +1,11 @@
 import 'dart:async';
 
+import 'package:async_builder/async_builder.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:async_builder/async_builder.dart';
 import 'package:rxdart/rxdart.dart';
 
 import 'common.dart';
@@ -418,6 +419,50 @@ void main() {
       expect(tester.widget<Text>(findText).data, equals('world'));
 
       expect(reportedErrors, isEmpty);
+    });
+
+    testWidgets('Keeps alive when keepAlive is true', (tester) async {
+      reportedErrors.clear();
+
+      final ctrl = Completer<String>();
+
+      bool getKeepAlive() {
+        final keepAliveElement = find.byElementPredicate(
+          (e) => e.widget is KeepAlive,
+          skipOffstage: false,
+        ).evaluate().single;
+        final renderObject = keepAliveElement.findRenderObject()!;
+        return (renderObject.parentData as KeepAliveParentDataMixin).keepAlive;
+      }
+
+      Widget build(bool keepAlive) {
+        return buildFrame(
+          ListView(
+            children: [
+              AsyncBuilder<String>(
+                future: ctrl.future,
+                builder: (context, value) => const SizedBox(),
+                reportError: reportError,
+                keepAlive: keepAlive,
+              ),
+            ],
+          ),
+        );
+      }
+
+      await tester.pumpWidget(build(false));
+
+      expect(
+        getKeepAlive(),
+        isFalse,
+      );
+
+      await tester.pumpWidget(build(true));
+
+      expect(
+        getKeepAlive(),
+        isTrue,
+      );
     });
   });
 }

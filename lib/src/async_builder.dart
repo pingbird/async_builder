@@ -1,6 +1,8 @@
 import 'dart:async';
+
 import 'package:flutter/widgets.dart';
 import 'package:rxdart/rxdart.dart';
+
 import 'common.dart';
 
 /// A Widget that builds depending on the state of a [Future] or [Stream].
@@ -90,6 +92,10 @@ class AsyncBuilder<T> extends StatefulWidget {
   /// If provided, overrides the function that prints errors to the console.
   final ErrorReporterFn reportError;
 
+  /// Whether or not we should send a keep alive
+  /// notification with [AutomaticKeepAliveClientMixin].
+  final bool keepAlive;
+
   /// Creates a widget that builds depending on the state of a [Future] or [Stream].
   const AsyncBuilder({
     Key? key,
@@ -103,18 +109,22 @@ class AsyncBuilder<T> extends StatefulWidget {
     this.retain = false,
     this.pause = false,
     bool? silent,
+    this.keepAlive = false,
     ErrorReporterFn? reportError,
-  }) : silent = silent ?? error != null,
-       reportError = reportError ?? FlutterError.reportError,
-       assert(!((future != null) && (stream != null)), 'AsyncBuilder should be given either a stream or future'),
-       assert(future == null || closed == null, 'AsyncBuilder should not be given both a future and closed builder'),
-       super(key: key);
+  })  : silent = silent ?? error != null,
+        reportError = reportError ?? FlutterError.reportError,
+        assert(!((future != null) && (stream != null)),
+            'AsyncBuilder should be given either a stream or future'),
+        assert(future == null || closed == null,
+            'AsyncBuilder should not be given both a future and closed builder'),
+        super(key: key);
 
   @override
   State<StatefulWidget> createState() => _AsyncBuilderState<T>();
 }
 
-class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
+class _AsyncBuilderState<T> extends State<AsyncBuilder<T>>
+    with AutomaticKeepAliveClientMixin {
   T? _lastValue;
   Object? _lastError;
   StackTrace? _lastStackTrace;
@@ -230,6 +240,8 @@ class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     if (_lastError != null && widget.error != null) {
       return widget.error!(context, _lastError!, _lastStackTrace);
     }
@@ -250,4 +262,7 @@ class _AsyncBuilderState<T> extends State<AsyncBuilder<T>> {
     _cancel();
     super.dispose();
   }
+
+  @override
+  bool get wantKeepAlive => widget.keepAlive;
 }
