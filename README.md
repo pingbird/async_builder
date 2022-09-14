@@ -44,6 +44,8 @@ AsyncBuilder<String>(
 )
 ```
 
+To avoid rebuilds see ## InitBuilder
+
 Note that you cannot provide both a stream and future.
 
 ## AsyncBuilder Features
@@ -93,7 +95,7 @@ InitBuilder, for example:
 ```dart
 static Future<int> getNumber() async => ...;
 
-build(context) => InitBuilder<int>(
+build(context) => InitBuilder<Future<int>>(
   getter: getNumber,
   builder: (context, future) => AsyncBuilder<int>(
     future: future,
