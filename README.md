@@ -44,7 +44,7 @@ AsyncBuilder<String>(
 )
 ```
 
-To avoid rebuilds see #InitBuilder
+To avoid rebuilds see [InitBuilder](#InitBuilder)
 
 Note that you cannot provide both a stream and future.
 
