@@ -1,3 +1,7 @@
+## [1.3.1+1]
+
+* Bump Dart SDK version
+
 ## [1.3.1]
 
 * Added a keepAlive flag to AsyncBuilder
