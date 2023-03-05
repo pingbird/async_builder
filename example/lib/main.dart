@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key key, this.title}) : super(key: key);
+  const MyHomePage({Key? key, required this.title}) : super(key: key);
 
   final String title;
 
@@ -57,7 +57,7 @@ class AsyncTestChild1 extends StatefulWidget {
 }
 
 class _AsyncTestChild1State extends State<AsyncTestChild1> {
-  Future<int> randomNumber;
+  Future<int>? randomNumber;
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +70,7 @@ class _AsyncTestChild1State extends State<AsyncTestChild1> {
       child: Row(children: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            primary: Colors.blue,
+            backgroundColor: Colors.blue,
             textStyle: const TextStyle(color: Colors.white),
           ),
           child: const Text('Generate'),
@@ -85,7 +85,7 @@ class _AsyncTestChild1State extends State<AsyncTestChild1> {
         if (randomNumber != null)
           AsyncBuilder<int>(
             waiting: (context) => const CircularProgressIndicator(),
-            builder: (context, i) => Text('$i', style: textTheme.headline6),
+            builder: (context, i) => Text('$i', style: textTheme.titleLarge),
             future: randomNumber,
           ),
       ]),
@@ -99,7 +99,7 @@ class AsyncTestChild2 extends StatefulWidget {
 }
 
 class _AsyncTestChild2State extends State<AsyncTestChild2> {
-  StreamController<int> randomNumber;
+  StreamController<int>? randomNumber;
 
   void initController() {
     setState(() {
@@ -118,7 +118,7 @@ class _AsyncTestChild2State extends State<AsyncTestChild2> {
       child: Row(children: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            primary: Colors.blue,
+            backgroundColor: Colors.blue,
             textStyle: const TextStyle(color: Colors.white),
           ),
           child: const Text('Reset'),
@@ -133,7 +133,7 @@ class _AsyncTestChild2State extends State<AsyncTestChild2> {
         const Padding(padding: EdgeInsets.only(right: 8)),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            primary: Colors.blue,
+            backgroundColor: Colors.blue,
             textStyle: const TextStyle(color: Colors.white),
           ),
           child: const Text('Add'),
@@ -141,15 +141,15 @@ class _AsyncTestChild2State extends State<AsyncTestChild2> {
             if (randomNumber == null) initController();
             final ctrl = randomNumber;
             await Future<void>.delayed(const Duration(seconds: 1));
-            ctrl.add(Random().nextInt(100));
+            ctrl!.add(Random().nextInt(100));
           },
         ),
         const Padding(padding: EdgeInsets.only(right: 16)),
         if (randomNumber != null)
           AsyncBuilder<int>(
             waiting: (context) => const CircularProgressIndicator(),
-            builder: (context, i) => Text('$i', style: textTheme.headline6),
-            stream: randomNumber.stream,
+            builder: (context, i) => Text('$i', style: textTheme.titleLarge),
+            stream: randomNumber!.stream,
           ),
       ]),
     );
@@ -162,7 +162,7 @@ class AsyncTestChild3 extends StatefulWidget {
 }
 
 class _AsyncTestChild3State extends State<AsyncTestChild3> {
-  StreamController<int> randomNumber;
+  StreamController<int>? randomNumber;
 
   void initController() {
     setState(() {
@@ -187,7 +187,7 @@ class _AsyncTestChild3State extends State<AsyncTestChild3> {
       child: Row(children: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            primary: Colors.blue,
+            backgroundColor: Colors.blue,
             textStyle: const TextStyle(color: Colors.white),
           ),
           child: Text(randomNumber == null ? 'Start' : 'Restart'),
@@ -196,15 +196,15 @@ class _AsyncTestChild3State extends State<AsyncTestChild3> {
         const Padding(padding: EdgeInsets.only(right: 8)),
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            primary: Colors.blue,
+            backgroundColor: Colors.blue,
             textStyle: const TextStyle(color: Colors.white),
           ),
           child: const Text('Close'),
-          onPressed: randomNumber == null || randomNumber.isClosed
+          onPressed: randomNumber == null || randomNumber!.isClosed
               ? null
               : () {
                   setState(() {
-                    randomNumber.close();
+                    randomNumber!.close();
                   });
                 },
         ),
@@ -212,10 +212,10 @@ class _AsyncTestChild3State extends State<AsyncTestChild3> {
         if (randomNumber != null)
           AsyncBuilder<int>(
             waiting: (context) => const CircularProgressIndicator(),
-            builder: (context, i) => Text('$i', style: textTheme.headline6),
+            builder: (context, i) => Text('$i', style: textTheme.titleLarge),
             closed: (context, i) =>
-                Text('$i (Closed)', style: textTheme.headline6),
-            stream: randomNumber.stream,
+                Text('$i (Closed)', style: textTheme.titleLarge),
+            stream: randomNumber!.stream,
           ),
       ]),
     );
@@ -228,7 +228,7 @@ class AsyncTestChild4 extends StatefulWidget {
 }
 
 class _AsyncTestChild4State extends State<AsyncTestChild4> {
-  StreamController<int> randomNumber;
+  StreamController<int>? randomNumber;
   var pause = false;
 
   void initController() {
@@ -238,7 +238,7 @@ class _AsyncTestChild4State extends State<AsyncTestChild4> {
       final ctrl = StreamController<int>();
       randomNumber = ctrl;
 
-      Timer timer;
+      late Timer timer;
       void start() {
         timer = Timer.periodic(const Duration(milliseconds: 500), (timer) {
           ctrl.add(Random().nextInt(100));
@@ -264,14 +264,14 @@ class _AsyncTestChild4State extends State<AsyncTestChild4> {
       child: Row(children: [
         ElevatedButton(
           style: ElevatedButton.styleFrom(
-            primary: Colors.blue,
+            backgroundColor: Colors.blue,
             textStyle: const TextStyle(color: Colors.white),
           ),
           child: Text(randomNumber == null ? 'Start' : 'Restart'),
           onPressed: initController,
         ),
         const Padding(padding: EdgeInsets.only(right: 16)),
-        Text('Pause', style: textTheme.subtitle2),
+        Text('Pause', style: textTheme.titleSmall),
         Switch(
             value: pause,
             onChanged: (b) {
@@ -284,8 +284,8 @@ class _AsyncTestChild4State extends State<AsyncTestChild4> {
         if (randomNumber != null)
           AsyncBuilder<int>(
             waiting: (context) => const CircularProgressIndicator(),
-            builder: (context, i) => Text('$i', style: textTheme.headline6),
-            stream: randomNumber.stream,
+            builder: (context, i) => Text('$i', style: textTheme.titleLarge),
+            stream: randomNumber!.stream,
             pause: pause,
           ),
       ]),
@@ -298,7 +298,11 @@ class TestCard extends StatelessWidget {
   final String desc;
   final Widget child;
 
-  const TestCard({this.title, this.desc, this.child});
+  const TestCard({
+    required this.title,
+    required this.desc,
+    required this.child,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -311,11 +315,11 @@ class TestCard extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: [
               Padding(
-                child: Text(title, style: textTheme.headline6),
+                child: Text(title, style: textTheme.titleLarge),
                 padding: const EdgeInsets.symmetric(vertical: 8),
               ),
               const Divider(),
-              Text(desc, style: textTheme.subtitle1),
+              Text(desc, style: textTheme.titleMedium),
               const Padding(padding: EdgeInsets.only(bottom: 16)),
               child,
             ],

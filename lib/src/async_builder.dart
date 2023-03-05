@@ -130,7 +130,7 @@ class _AsyncBuilderState<T> extends State<AsyncBuilder<T>>
   StackTrace? _lastStackTrace;
   bool _hasFired = false;
   bool _isClosed = false;
-  StreamSubscription? _subscription;
+  StreamSubscription<T>? _subscription;
 
   void _cancel() {
     if (!widget.retain) {
